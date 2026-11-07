@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kendrr Store china</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef1f4;
+    --surface: #ffffff;
+    --ink: #14181f;
+    --muted: #6a7480;
+    --line: #d9dee4;
+    --red: #d7261e;
+    --red-ink: #ffffff;
+    --jade: #0f7b6c;
+    --field: #f5f7f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161b;
+      --surface: #1b2128;
+      --ink: #eef1f4;
+      --muted: #8f9aa6;
+      --line: #2c353f;
+      --red: #ef4a41;
+      --jade: #35c2ad;
+      --field: #232a32;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16px; line-height: 1.4; }
+  body { padding: 0 16px calc(88px + env(safe-area-inset-bottom, 0px)); max-width: 560px; margin: 0 auto; }
+
+  header { padding: 20px 0 12px; }
+  .brand { font-family: "Unbounded", "Onest", sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; margin: 0; }
+  .brand span { color: var(--red); }
+  .sub { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card { background: var(--surface); border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--line); }
+  h2 { font-family: "Unbounded", "Onest", sans-serif; font-weight: 500; font-size: 16px; margin: 0 0 14px; }
+
+  label { display: block; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .field { margin-bottom: 14px; }
+  input, select {
+    width: 100%; font: inherit; color: var(--ink); background: var(--field);
+    border: 1.5px solid transparent; border-radius: 12px; padding: 13px 14px; outline: none; appearance: none;
+  }
+  input:focus, select:focus { border-color: var(--red); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .error { color: var(--red); font-size: 13px; min-height: 18px; margin: 0 0 8px; }
+
+  button { font: inherit; cursor: pointer; border: 0; }
+  .btn { width: 100%; background: var(--red); color: var(--red-ink); font-weight: 600; padding: 15px; border-radius: 14px; }
+  .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: var(--field); color: var(--ink); }
+  .btn:disabled { opacity: 0.45; }
+
+  /* ценник: итог расчёта */
+  .tag { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 12px; position: relative; }
+  .tag::before { content: ""; position: absolute; top: 16px; right: 16px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg); border: 1px solid var(--line); }
+  .tag dl { margin: 0; }
+  .tag .line { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: 14px; color: var(--muted); }
+  .tag .line b { color: var(--ink); font-weight: 500; }
+  .tag .cut { border-top: 2px dashed var(--line); margin: 10px 0; }
+  .tag .total { display: flex; justify-content: space-between; align-items: baseline; }
+  .tag .total span { font-size: 14px; color: var(--muted); }
+  .tag .total strong { font-family: "Unbounded", "Onest", sans-serif; font-size: 26px; color: var(--jade); letter-spacing: -0.02em; }
+
+  /* корзина */
+  .item { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+  .item-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+  .plat { display: inline-block; background: var(--red); color: var(--red-ink); font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 99px; }
+  .item a { color: var(--ink); font-size: 13px; word-break: break-all; display: block; margin-top: 8px; opacity: 0.8; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .item-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .qty { display: flex; align-items: center; gap: 4px; background: var(--field); border-radius: 12px; }
+  .qty button { width: 38px; height: 38px; background: transparent; color: var(--ink); font-size: 20px; }
+  .qty span { min-width: 26px; text-align: center; font-weight: 600; }
+  .price { text-align: right; }
+  .price b { font-size: 17px; }
+  .price small { display: block; color: var(--muted); font-size: 12px; }
+  .del { background: transparent; color: var(--muted); font-size: 20px; padding: 0 4px; line-height: 1; }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 12px; }
+  .empty strong { display: block; color: var(--ink); font-family: "Unbounded", "Onest", sans-serif; font-weight: 500; margin-bottom: 6px; }
+
+  /* нижняя навигация */
+  nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 6px; justify-content: center; }
+  nav button { flex: 1; max-width: 180px; background: transparent; color: var(--muted); padding: 10px 6px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+  nav button.active { background: var(--field); color: var(--ink); }
+  nav .count { display: inline-block; min-width: 18px; background: var(--red); color: var(--red-ink); border-radius: 99px; font-size: 11px; padding: 1px 5px; margin-left: 4px; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-size: 14px; opacity: 0; pointer-events: none; transition: .2s; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .toast, .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="brand">Kendrr Store <span>china</span></h1>
+  <p class="sub">Заказы из Китая под ключ</p>
+</header>
+
+<!-- ТОВАР -->
+<section class="panel active" id="tab-add">
+  <div class="card">
+    <h2>Добавить товар</h2>
+
+    <div class="field">
+      <label for="f-url">Ссылка на товар</label>
+      <input id="f-url" type="url" inputmode="url" placeholder="https://...">
+    </div>
+
+    <div class="field">
+      <label for="f-platform">Площадка</label>
+      <select id="f-platform">
+        <option value="">Выберите площадку</option>
+        <option>Poizon</option>
+        <option>Taobao</option>
+        <option>Tmall</option>
+        <option>1688</option>
+        <option>Pinduoduo</option>
+        <option>JD.com</option>
+        <option>Другая</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="f-size">Размер</label>
+        <input id="f-size" type="text" placeholder="Например, 42 или M">
+      </div>
+      <div class="field">
+        <label for="f-qty">Количество</label>
+        <input id="f-qty" type="number" inputmode="numeric" min="1" step="1" value="1">
+      </div>
+    </div>
+    <div class="hint" style="margin-top:-6px;margin-bottom:14px">Если у товара нет размера, напишите «нет».</div>
+
+    <div class="field">
+      <label for="f-price">Цена за 1 шт. в юанях (¥)</label>
+      <input id="f-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0">
+    </div>
+
+    <div class="tag" id="live-tag" style="display:none"></div>
+
+    <p class="error" id="add-error"></p>
+    <button class="btn" id="btn-add">Добавить в корзину</button>
+  </div>
+</section>
+
+<!-- КОРЗИНА -->
+<section class="panel" id="tab-cart">
+  <div id="cart-list"></div>
+  <div id="cart-total"></div>
+  <p class="error" id="cart-error"></p>
+  <button class="btn" id="btn-checkout">Оформить заказ</button>
+  <button class="btn ghost" id="btn-clear" style="margin-top:10px">Очистить корзину</button>
+</section>
+
+<!-- КАЛЬКУЛЯТОР -->
+<section class="panel" id="tab-calc">
+  <div class="card">
+    <h2>Калькулятор стоимости</h2>
+    <div class="row">
+      <div class="field">
+        <label for="c-price">Цена в юанях (¥)</label>
+        <input id="c-price" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0">
+      </div>
+      <div class="field">
+        <label for="c-qty">Количество</label>
+        <input id="c-qty" type="number" inputmode="numeric" min="1" step="1" value="1">
+      </div>
+    </div>
+  </div>
+  <div class="tag" id="calc-tag"></div>
+</section>
+
+<nav>
+  <button data-tab="add" class="active">Товар</button>
+  <button data-tab="cart">Корзина<span class="count" id="nav-count" hidden>0</span></button>
+  <button data-tab="calc">Калькулятор</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ====== НАСТРОЙКИ РАСЧЁТА ======
+  const RATE = 15;        // курс: 1 ¥ = 15 ₽
+  const COMMISSION = 1.3; // комиссия (множитель)
+  // ================================
+
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => Math.ceil(n).toLocaleString("ru-RU");
+  const fmtCny = (n) => n.toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+
+  function calc(price, qty) {
+    const cny = price * qty;
+    const base = cny * RATE;
+    const total = base * COMMISSION;
+    return { cny, base, fee: total - base, total };
+  }
+
+  function tagHTML(r) {
+    return `<dl>
+      <div class="line"><span>Стоимость в юанях</span><b>${fmtCny(r.cny)} ¥</b></div>
+      <div class="line"><span>По курсу ${RATE} ₽</span><b>${fmt(r.base)} ₽</b></div>
+      <div class="line"><span>Комиссия ×${String(COMMISSION).replace(".", ",")}</span><b>+${fmt(r.fee)} ₽</b></div>
+    </dl>
+    <div class="cut"></div>
+    <div class="total"><span>Итого</span><strong>${fmt(r.total)} ₽</strong></div>`;
+  }
+
+  // ---- корзина ----
+  const KEY = "kendrr_cart_v1";
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { cart = []; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} };
+
+  function toast(text) {
+    const t = $("toast"); t.textContent = text; t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 1800);
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function renderCart() {
+    const list = $("cart-list");
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    $("nav-count").hidden = cart.length === 0;
+    $("nav-count").textContent = count;
+
+    const has = cart.length > 0;
+    $("btn-checkout").style.display = has ? "" : "none";
+    $("btn-clear").style.display = has ? "" : "none";
+
+    if (!has) {
+      list.innerHTML = `<div class="empty"><strong>Корзина пуста</strong>Добавьте первый товар на вкладке «Товар».</div>`;
+      $("cart-total").innerHTML = "";
+      return;
+    }
+
+    list.innerHTML = cart.map((it, idx) => {
+      const r = calc(it.price, it.qty);
+      return `<div class="item">
+        <div class="item-top">
+          <span class="plat">${esc(it.platform)}</span>
+          <button class="del" data-del="${idx}" aria-label="Удалить">×</button>
+        </div>
+        <a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url)}</a>
+        <div class="meta">Размер: ${esc(it.size)} · ${fmtCny(it.price)} ¥ за шт.</div>
+        <div class="item-bottom">
+          <div class="qty">
+            <button data-minus="${idx}" aria-label="Меньше">−</button>
+            <span>${it.qty}</span>
+            <button data-plus="${idx}" aria-label="Больше">+</button>
+          </div>
+          <div class="price"><b>${fmt(r.total)} ₽</b><small>${fmtCny(r.cny)} ¥</small></div>
+        </div>
+      </div>`;
+    }).join("");
+
+    const sum = cart.reduce((a, it) => {
+      const r = calc(it.price, it.qty);
+      return { cny: a.cny + r.cny, base: a.base + r.base, fee: a.fee + r.fee, total: a.total + r.total };
+    }, { cny: 0, base: 0, fee: 0, total: 0 });
+    $("cart-total").innerHTML = `<div class="tag">${tagHTML(sum)}</div>`;
+  }
+
+  $("cart-list").addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.del !== undefined) cart.splice(+b.dataset.del, 1);
+    else if (b.dataset.plus !== undefined) cart[+b.dataset.plus].qty += 1;
+    else if (b.dataset.minus !== undefined) {
+      const it = cart[+b.dataset.minus];
+      if (it.qty > 1) it.qty -= 1; else cart.splice(+b.dataset.minus, 1);
+    } else return;
+    save(); renderCart();
+  });
+
+  $("btn-clear").addEventListener("click", () => {
+    if (confirm("Удалить все товары из корзины?")) { cart = []; save(); renderCart(); }
+  });
+
+  // ---- добавление товара ----
+  function readForm() {
+    return {
+      url: $("f-url").value.trim(),
+      platform: $("f-platform").value,
+      size: $("f-size").value.trim(),
+      qty: parseInt($("f-qty").value, 10),
+      price: parseFloat($("f-price").value),
+    };
+  }
+
+  function updateLive() {
+    const f = readForm();
+    const tag = $("live-tag");
+    if (f.price > 0 && f.qty > 0) { tag.style.display = ""; tag.innerHTML = tagHTML(calc(f.price, f.qty)); }
+    else tag.style.display = "none";
+  }
+  ["f-price", "f-qty"].forEach((id) => $(id).addEventListener("input", updateLive));
+
+  $("btn-add").addEventListener("click", () => {
+    const f = readForm(); const err = $("add-error");
+    if (!/^https?:\/\/\S+/i.test(f.url)) return (err.textContent = "Вставьте ссылку на товар, она должна начинаться с http");
+    if (!f.platform) return (err.textContent = "Выберите площадку");
+    if (!f.size) return (err.textContent = "Укажите размер или напишите «нет»");
+    if (!(f.qty >= 1)) return (err.textContent = "Количество должно быть не меньше 1");
+    if (!(f.price > 0)) return (err.textContent = "Укажите цену в юанях");
+    err.textContent = "";
+    cart.push(f); save(); renderCart();
+    ["f-url", "f-size", "f-price"].forEach((id) => ($(id).value = ""));
+    $("f-platform").value = ""; $("f-qty").value = 1; updateLive();
+    toast("Товар добавлен в корзину");
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+  });
+
+  // ---- оформление ----
+  $("btn-checkout").addEventListener("click", () => {
+    const err = $("cart-error");
+    if (!cart.length) return;
+    const payload = JSON.stringify({ items: cart });
+    if (new Blob([payload]).size > 3900) {
+      err.textContent = "Заказ слишком большой для одной отправки. Оформите его в два захода.";
+      return;
+    }
+    err.textContent = "";
+    if (tg && tg.initData) {
+      tg.sendData(payload); // бот получит заказ, мини-приложение закроется
+      try { localStorage.removeItem(KEY); } catch (e) {}
+    } else {
+      err.textContent = "Откройте приложение через бота в Telegram, чтобы отправить заказ.";
+    }
+  });
+
+  // ---- калькулятор ----
+  function renderCalc() {
+    const price = parseFloat($("c-price").value) || 0;
+    const qty = parseInt($("c-qty").value, 10) || 0;
+    $("calc-tag").innerHTML = tagHTML(calc(price, Math.max(qty, 0)));
+  }
+  ["c-price", "c-qty"].forEach((id) => $(id).addEventListener("input", renderCalc));
+
+  // ---- вкладки ----
+  document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("nav button").forEach((x) => x.classList.toggle("active", x === b));
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "tab-" + b.dataset.tab));
+    window.scrollTo(0, 0);
+  }));
+
+  renderCart(); renderCalc();
+</script>
+</body>
+</html>
