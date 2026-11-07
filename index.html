@@ -344,7 +344,7 @@
       return;
     }
     err.textContent = "";
-    if (tg && tg.initData) {
+    if (tg && tg.platform && tg.platform !== "unknown") {
       tg.sendData(payload); // бот получит заказ, мини-приложение закроется
       try { localStorage.removeItem(KEY); } catch (e) {}
     } else {
